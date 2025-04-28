@@ -1,99 +1,240 @@
-var btn = document.getElementById("btn");
-var title = document.getElementById("title");
-var description = document.getElementById("description");
-var data = document.querySelector(".data");
-var search = document.getElementById("search");
+var title = document.querySelector("#title");
+var desc = document.querySelector("#description");
+var btn = document.querySelector("#btn");
+var tasklist = document.querySelector(".tasklist");
+var arrayoftasks = [];
+var search = document.querySelector("#searcinput");
+var currentEditId = null;
 
-var todolist = JSON.parse(localStorage.getItem("todos")) || [];
-var editIndex = null;
+//make array == local storage 
 
-display(); // أول لما الصفحة تفتح
+if(localStorage.getItem("tasks")){
+    arrayoftasks=JSON.parse(localStorage.getItem("tasks"));
+    addelementtotasklists(arrayoftasks);
 
+}
+
+
+
+//delete btn 
+tasklist.addEventListener("click",function (e) {
+    if(e.target.classList.contains("delete_btn")){
+    deleteTaskWith(e.target.parentElement.getAttribute("id"));
+    e.target.parentElement.remove() 
+    }
+    
+})
+
+
+//done botton 
+tasklist.addEventListener("click", function (e) {
+    if (e.target.classList.contains("taskstatus")) {
+        e.target.classList.add("taskdone");
+        e.target.classList.remove("taskstatus");
+    } else if (e.target.classList.contains("taskdone")) {
+        e.target.classList.add("taskstatus");
+        e.target.classList.remove("taskdone");
+    }
+});
+
+
+
+//edite btn 
+tasklist.addEventListener("click",function (e) {
+    if(e.target.classList.contains("edit_btn")){
+    edittaskwith(e.target.parentElement.getAttribute("id"));
+    }
+    
+})
+
+function edittaskwith(id) {
+    const todo = arrayoftasks.find(task => task.id == id);
+    if (todo) {
+        title.value = todo.title;
+        desc.value = todo.desc;
+        currentEditId = id; // نخزن ال id اللي بنعدله
+        btn.innerText = "Save Edit"; // نغير شكل الزرار بدل Add
+    }
+}
+
+
+
+//main
 btn.addEventListener("click", function () {
-    if (!validateInputs()) {
-        alert("Description must be at least 20 characters.");
-        return;
-    }
-
-    if (editIndex === null) {
-        var todo = {
-            title: title.value,
-            description: description.value,
-            completed: false
-        };
-        todolist.push(todo);
-    } else {
-        todolist[editIndex].title = title.value;
-        todolist[editIndex].description = description.value;
-        editIndex = null;
-        btn.innerText = "Add";
-    }
-
-    saveToLocalStorage();
-    clearInputs();
-    display();
-});
-
-search.addEventListener("input", function () {
-    display(this.value.trim().toLowerCase());
-});
-
-function display(searchTerm = "") {
-    data.innerHTML = "";
-
-    var found = false;
-
-    for (var i = 0; i < todolist.length; i++) {
-        if (
-            todolist[i].title.toLowerCase().includes(searchTerm) ||
-            todolist[i].description.toLowerCase().includes(searchTerm)
-        ) {
-            found = true;
-            data.innerHTML += `
-                <div>
-                    <h3 style="${todolist[i].completed ? 'text-decoration: line-through;' : ''}">${todolist[i].title}</h3>
-                    <p>${todolist[i].description}</p>
-                    <button onclick="deleteTodo(${i})">Delete</button>
-                    <button onclick="edit(${i})">Edit</button>
-                    <button onclick="completeTask(${i})">${todolist[i].completed ? 'Undo' : 'Complete'}</button>
-                </div>
-            `;
+    
+    if (title.value !== "" && desc.value !== "") {
+        
+        // هنا validation
+        if (!validateInputs(title.value, desc.value)) {
+            return; // لو validation غلط، وقف الكود
         }
+        
+        //edit button 
+        if (currentEditId) {
+            updateTask(currentEditId);
+        } else {
+
+            //add new task
+            const todo = {
+                id: Date.now(),
+                title: title.value,
+                desc: desc.value,
+                done: false 
+            };
+
+            addtodotoarray(todo);
+            addelementtotasklists(arrayoftasks);
+
+            title.value = "";
+            desc.value = "";
+            currentEditId = null;
+            btn.innerText = "Add";
+        }
+
+    } else {
+        window.alert("input is required");
     }
+});
 
-    if (!found) {
-        data.innerHTML = "<p>No matching tasks found.</p>";
+
+
+
+function addtodotoarray(todo){
+    arrayoftasks.push(todo);
+    addtolocalstorage(arrayoftasks);
+}
+
+
+
+
+//display tasks
+function addelementtotasklists(arrayoftasks){
+   
+
+
+   //clear the tasklist
+    tasklist.innerHTML = "";
+
+    //appear the values is tasklist
+    arrayoftasks.forEach((todo) => {
+        //create div for task
+        var div = document.createElement("div")
+        div.id= todo.id;
+        div.className = "task";
+        div.appendChild(document.createTextNode(todo.title));
+
+
+        // //create class for buttons
+        // var bottons = document.createElement("div");
+        // bottons.className = "bottons";
+        // div.appendChild(bottons)
+       
+         //edit button 
+         var edit = document.createElement("button");
+         edit.className = "edit_btn";
+         edit.appendChild(document.createTextNode("Edit"));
+         div.appendChild(edit)
+       
+       
+       
+        //delte btn 
+        var del = document.createElement("button");
+        del.className = "delete_btn";
+        del.appendChild(document.createTextNode("delete"));
+        div.appendChild(del)
+
+        
+        //done btn 
+        var del = document.createElement("button");
+        del.className = "taskstatus";
+        del.appendChild(document.createTextNode("done"));
+        div.appendChild(del)
+      
+
+        tasklist.appendChild(div)        
+    });
+}
+
+
+
+
+//add to local storage 
+function  addtolocalstorage(arrayoftasks){
+    localStorage.setItem("tasks",JSON.stringify(arrayoftasks))
+}
+
+function gitfromlocalstorage(){
+    var data = localStorage.getItem("tasks")
+    if(data){
+        tasks =JSON.parse(data);
+        
     }
 }
 
-function deleteTodo(index) {
-    todolist.splice(index, 1);
-    saveToLocalStorage();
-    display(search.value.trim().toLowerCase());
+function deleteTaskWith(id){
+
+    arrayoftasks= arrayoftasks.filter((todo)=>todo.id != id )
+    addtolocalstorage(arrayoftasks);
+ }
+
+
+
+
+ function logarray(){
+    console.log(arrayoftasks);
+    
+ }
+
+
+
+
+ //search 
+ searcinput.addEventListener("input",function(){
+    
+  var srch=  arrayoftasks.filter(todo => todo.title.includes(search.value))
+  addelementtotasklists(srch);
+
+
+ })
+ 
+
+ //update task
+ function updateTask(id) {
+    arrayoftasks = arrayoftasks.map(todo => {
+        if (todo.id == id) {
+            return {
+                ...todo,
+                title: title.value,
+                desc: desc.value
+            };
+        }
+        return todo;
+    });
+    // location.reload();
+    addelementtotasklists(arrayoftasks);
+    addtolocalstorage(arrayoftasks); 
+    location.reload();
 }
 
-function edit(index) {
-    title.value = todolist[index].title;
-    description.value = todolist[index].description;
-    editIndex = index;
-    btn.innerText = "Update";
-}
 
-function completeTask(index) {
-    todolist[index].completed = !todolist[index].completed;
-    saveToLocalStorage();
-    display(search.value.trim().toLowerCase());
-}
 
-function clearInputs() {
-    title.value = "";
-    description.value = "";
-}
-
-function validateInputs() {
-    return description.value.trim().length >= 20;
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem("todos", JSON.stringify(todolist));
-}
+function validateInputs(title, description) {
+    // Regular expression  title
+    const titleRegex = /^[A-Z][a-z]{3,8}$/;
+  
+    // Validation  title
+    if (!titleRegex.test(title)) {
+      alert("Title must start with an uppercase letter followed by 3 to 8 lowercase letters.");
+      return false;
+    }
+  
+    // Validation  description
+    if (description.length < 20) {
+      alert("Description must be more than 20 characters.");
+      return false;
+    }
+  
+    return true; 
+  }
+  
+ logarray()

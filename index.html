@@ -1,35 +1,40 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Todo list</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="todo-container">
-    <h2>todo list</h2>
+    <div class="main">
 
-    <div class="child">
-        <h4>title</h4>
-        <input type="text" id="title">
+ 
+        <!-- Head -->
+        
+        <div class="head">
+            <h2>Todo List</h2>
+        </div>
+
+        <!-- inputs -->
+        <div class="form">
+            <input id="title" type="text" name="title" placeholder="Title" style="text-align: center;  ">
+            <input id="description" type="text" placeholder="whrite the description here .." style="height: 50px;text-align: center; ">
+            <button id="btn">add </button>
+        </div>
+
+
+        <!-- search -->
+        <div class="search">
+         <input id="searcinput" type="text" name="search" placeholder="search here ..">
+        </div>
+<br><br><br>
+        <!-- The List -->
+         <div class="tasklist">
+            <div class="task"><p>zero tasks</p></div>
+         </div>
+
     </div>
-    <div class="child">
-        <h4>description</h4>
-        <input type="text" id="description">
-    </div>
-   
-    <button id="btn">add</button>
-  </div>
-
-  <div class="search-container">
-    <input type="text" id="search" placeholder="Search tasks...">
-</div>
-
-
-  <div class="data">
-  </div>
-
-  <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

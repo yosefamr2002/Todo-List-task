@@ -1,55 +1,103 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    display: flex;
-    justify-content: center;
+
+body{
+    background-color: #333;
+    color: white;
+    font-family: system-ui ;
+}
+.main{
+    background-color: rgb(71, 52, 52);
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+.head{
+    text-align: center;
+}
+
+
+
+
+/* input */
+.form{
     align-items: center;
-    height: 100vh;
-    direction: rtl;
-    flex-direction: column; 
-    text-align: center; 
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+    background-color: #ffffff16;
 }
-
-.todo-container {
-    text-align: center;
+.form input{
+    background-color: rgba(200, 200, 200, 0.93);
+    border-radius: 10px;
+    width: 40%;
+}
+input:focus{
     background-color: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    width: 300px;
-    margin-bottom: 20px; 
+    transform: scale(1.1);
 }
 
-.todo-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+
+
+
+/* button */
+.form button{
+    background-color:#fc00e7 ;
+border-radius: 10px;
+width: 20%;
+}
+.form button:hover{
+    transform: scale(1.05);
+    letter-spacing: 5px;
+
 }
 
-.child {
-    margin-bottom: 12px;
+
+/* Search */
+.search{
+    background-color: #ffffff16;
+    margin-top: 30px;
 }
 
-.child h4 {
-    text-align: center; }
 
-.list {
-    display: block;
-    text-align: center; 
-    background-color: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    width: 300px;
-    margin-top: 20px;
+/* tasks */
+.tasklist{
+background-color: black;
 }
-.data {
-        text-align: center;
-        background-color: white;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        width: 300px;
-        margin-bottom: 20px; 
-    
+
+
+/* Eechtask */
+.task{
+    display: flex;
+    color: black;
+    justify-content: space-around;
+    color: black;
+    margin-top:20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: bisque;
 }
+
+
+
+.delete_btn{
+    align-items: flex-end;
+    text-align: end;
+    justify-content: flex-end;
+    background-color: red;
+    cursor: pointer;
+}
+
+.edit_btn{
+    align-items: flex-end;
+    background-color: rgb(0, 195, 255);
+    cursor: pointer;
+}
+
+.taskdone{
+    align-items: flex-end;
+    background-color: green;
+}
+
+
+
+
